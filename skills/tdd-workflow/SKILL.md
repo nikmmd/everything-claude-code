@@ -253,18 +253,21 @@ src/
 
 ## Mocking External Services
 
-### Supabase Mock
+### Database Mock
 ```typescript
-jest.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => Promise.resolve({
-          data: [{ id: 1, name: 'Test Market' }],
-          error: null
-        }))
-      }))
+jest.mock('@/lib/db', () => ({
+  db: {
+    query: jest.fn(() => Promise.resolve({
+      rows: [{ id: 1, name: 'Test Market' }]
     }))
+  }
+}))
+
+// Or with a repository pattern
+jest.mock('@/repositories/market', () => ({
+  marketRepository: {
+    findById: jest.fn((id) => Promise.resolve({ id, name: 'Test Market' })),
+    findAll: jest.fn(() => Promise.resolve([{ id: 1, name: 'Test Market' }]))
   }
 }))
 ```

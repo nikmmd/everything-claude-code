@@ -68,13 +68,13 @@ Agent (planner):
 ### Phase 4: Frontend Components
 - Create NotificationBell component in header
 - Add NotificationList modal
-- Implement real-time updates via Supabase subscriptions
+- Implement real-time updates (WebSocket/SSE)
 - Add notification preferences page
 
 ## Dependencies
 - Redis (for queue)
 - Email service (SendGrid/Resend)
-- Supabase real-time subscriptions
+- WebSocket server or SSE for real-time updates
 
 ## Risks
 - HIGH: Email deliverability (SPF/DKIM required)

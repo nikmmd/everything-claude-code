@@ -53,7 +53,7 @@ For each module:
 - Extract exports (public API)
 - Map imports (dependencies)
 - Identify routes (API routes, pages)
-- Find database models (Supabase, Prisma)
+- Find database models (Prisma, TypeORM, raw SQL)
 - Locate queue/worker modules
 ```
 
@@ -159,7 +159,7 @@ website/src/
 
 ## Data Flow
 
-User → Markets Page → API Route → Supabase → Redis (optional) → Response
+User → Markets Page → API Route → Database → Redis (optional) → Response
 
 ## External Dependencies
 
@@ -188,11 +188,11 @@ User → Markets Page → API Route → Supabase → Redis (optional) → Respon
 
 ## Data Flow
 
-API Route → Supabase Query → Redis (cache) → Response
+API Route → Database Query → Redis (cache) → Response
 
 ## External Services
 
-- Supabase - PostgreSQL database
+- PostgreSQL - Database
 - Redis Stack - Vector search
 - OpenAI - Embeddings
 ```
@@ -208,9 +208,9 @@ API Route → Supabase Query → Redis (cache) → Response
 - Email authentication
 - Session management
 
-## Database (Supabase)
+## Database (PostgreSQL)
 - PostgreSQL tables
-- Real-time subscriptions
+- Transactions and migrations
 - Row Level Security
 
 ## Search (Redis + OpenAI)

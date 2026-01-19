@@ -192,11 +192,11 @@ components/Button.tsx (with variant prop)
 ## Example Project-Specific Rules
 
 **CRITICAL - NEVER REMOVE:**
-- Privy authentication code
-- Solana wallet integration
-- Supabase database clients
+- Authentication code (Privy, Auth0, etc.)
+- Wallet integration (Solana, Ethereum)
+- Database clients and connections
 - Redis/OpenAI semantic search
-- Market trading logic
+- Core business logic
 - Real-time subscription handlers
 
 **SAFE TO REMOVE:**

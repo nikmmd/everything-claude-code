@@ -16,11 +16,6 @@
       },
       "description": "Web scraping and crawling"
     },
-    "supabase": {
-      "command": "npx",
-      "args": ["-y", "@supabase/mcp-server-supabase@latest", "--project-ref=YOUR_PROJECT_REF"],
-      "description": "Supabase database operations"
-    },
     "memory": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-memory"],
@@ -78,8 +73,17 @@
     },
     "filesystem": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/your/projects"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/path/to/your/projects"
+      ],
       "description": "Filesystem operations (set your path)"
+    },
+    "snyk": {
+      "command": "npx",
+      "args": ["-y", "snyk@latest", "mcp", "-t", "stdio"],
+      "env": {}
     }
   },
   "_comments": {

@@ -116,24 +116,26 @@ await db.query(query)
 
 #### ✅ ALWAYS Use Parameterized Queries
 ```typescript
-// Safe - parameterized query
-const { data } = await supabase
-  .from('users')
-  .select('*')
-  .eq('email', userEmail)
-
-// Or with raw SQL
-await db.query(
+// Safe - parameterized query (PostgreSQL)
+const { rows } = await db.query(
   'SELECT * FROM users WHERE email = $1',
   [userEmail]
 )
+
+// Safe - ORM with parameterized queries
+const user = await prisma.user.findUnique({
+  where: { email: userEmail }
+})
+
+// Safe - query builder
+const users = await knex('users').where('email', userEmail)
 ```
 
 #### Verification Steps
 - [ ] All database queries use parameterized queries
 - [ ] No string concatenation in SQL
 - [ ] ORM/query builder used correctly
-- [ ] Supabase queries properly sanitized
+- [ ] No raw queries with user input interpolation
 
 ### 4. Authentication & Authorization
 
@@ -167,26 +169,29 @@ export async function deleteUser(userId: string, requesterId: string) {
 }
 ```
 
-#### Row Level Security (Supabase)
+#### Row Level Security (PostgreSQL)
 ```sql
 -- Enable RLS on all tables
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
--- Users can only view their own data
+-- Users can only view their own data (using session variable)
 CREATE POLICY "Users view own data"
   ON users FOR SELECT
-  USING (auth.uid() = id);
+  USING (id = current_setting('app.current_user_id')::uuid);
 
 -- Users can only update their own data
 CREATE POLICY "Users update own data"
   ON users FOR UPDATE
-  USING (auth.uid() = id);
+  USING (id = current_setting('app.current_user_id')::uuid);
+
+-- Set user context at start of request
+SET LOCAL app.current_user_id = 'user-uuid-here';
 ```
 
 #### Verification Steps
 - [ ] Tokens stored in httpOnly cookies (not localStorage)
 - [ ] Authorization checks before sensitive operations
-- [ ] Row Level Security enabled in Supabase
+- [ ] Row Level Security enabled where appropriate
 - [ ] Role-based access control implemented
 - [ ] Session management secure
 
@@ -477,7 +482,7 @@ Before ANY production deployment:
 - [ ] **Error Handling**: No sensitive data in errors
 - [ ] **Logging**: No sensitive data logged
 - [ ] **Dependencies**: Up to date, no vulnerabilities
-- [ ] **Row Level Security**: Enabled in Supabase
+- [ ] **Row Level Security**: Enabled where appropriate (PostgreSQL RLS)
 - [ ] **CORS**: Properly configured
 - [ ] **File Uploads**: Validated (size, type)
 - [ ] **Wallet Signatures**: Verified (if blockchain)
@@ -486,7 +491,7 @@ Before ANY production deployment:
 
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - [Next.js Security](https://nextjs.org/docs/security)
-- [Supabase Security](https://supabase.com/docs/guides/auth)
+- [PostgreSQL Row Level Security](https://www.postgresql.org/docs/current/ddl-rowsecurity.html)
 - [Web Security Academy](https://portswigger.net/web-security)
 
 ---

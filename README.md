@@ -78,7 +78,7 @@ everything-claude-code/
 |   |-- hooks.json          # PreToolUse, PostToolUse, Stop hooks
 |
 |-- mcp-configs/      # MCP server configurations
-|   |-- mcp-servers.json    # GitHub, Supabase, Vercel, Railway, etc.
+|   |-- mcp-servers.json    # GitHub, Vercel, Railway, Cloudflare, etc.
 |
 |-- plugins/          # Plugin ecosystem documentation
 |   |-- README.md           # Plugins, marketplaces, skills guide

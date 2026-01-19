@@ -13,7 +13,7 @@
         "description": "Block dev servers outside tmux - ensures you can access logs"
       },
       {
-        "matcher": "tool == \"Bash\" && tool_input.command matches \"(npm (install|test)|pnpm (install|test)|yarn (install|test)|bun (install|test)|cargo build|make|docker|pytest|vitest|playwright)\"",
+        "matcher": "tool == \"Bash\" && tool_input.command matches \"(npm (install|test)|pnpm (install|test)|yarn (install|test)|bun (install|test)|cargo build|make|docker|pytest|vitest|playwright|go test|go build|terraform plan|terraform apply)\"",
         "hooks": [
           {
             "type": "command",
@@ -83,6 +83,66 @@
           }
         ],
         "description": "Warn about console.log statements after edits"
+      },
+      {
+        "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.py$\"",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "#!/bin/bash\n# Auto-format Python files with ruff (via uv/poetry)\ninput=$(cat)\nfile_path=$(echo \"$input\" | jq -r '.tool_input.file_path // \"\"')\n\nif [ -n \"$file_path\" ] && [ -f \"$file_path\" ]; then\n  dir=$(dirname \"$file_path\")\n  # Find project root with pyproject.toml\n  project_root=\"$dir\"\n  while [ \"$project_root\" != \"/\" ] && [ ! -f \"$project_root/pyproject.toml\" ]; do\n    project_root=$(dirname \"$project_root\")\n  done\n  \n  if [ -f \"$project_root/pyproject.toml\" ]; then\n    cd \"$project_root\"\n    if command -v uv >/dev/null 2>&1; then\n      uv run ruff format \"$file_path\" 2>&1 | head -5 >&2 || true\n      uv run ruff check --fix \"$file_path\" 2>&1 | head -5 >&2 || true\n    elif command -v poetry >/dev/null 2>&1; then\n      poetry run ruff format \"$file_path\" 2>&1 | head -5 >&2 || true\n      poetry run ruff check --fix \"$file_path\" 2>&1 | head -5 >&2 || true\n    fi\n  fi\nfi\n\necho \"$input\""
+          }
+        ],
+        "description": "Auto-format Python files with ruff via uv/poetry after edits"
+      },
+      {
+        "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.py$\"",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "#!/bin/bash\n# Warn about print() statements in Python files\ninput=$(cat)\nfile_path=$(echo \"$input\" | jq -r '.tool_input.file_path // \"\"')\n\nif [ -n \"$file_path\" ] && [ -f \"$file_path\" ]; then\n  prints=$(grep -n \"^[^#]*print(\" \"$file_path\" 2>/dev/null | grep -v \"# noqa\" || true)\n  \n  if [ -n \"$prints\" ]; then\n    echo \"[Hook] WARNING: print() statements found in $file_path\" >&2\n    echo \"$prints\" | head -5 >&2\n    echo \"[Hook] Use logging instead of print() in production code\" >&2\n  fi\nfi\n\necho \"$input\""
+          }
+        ],
+        "description": "Warn about print() statements in Python files"
+      },
+      {
+        "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.go$\"",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "#!/bin/bash\n# Auto-format Go files with gofmt\ninput=$(cat)\nfile_path=$(echo \"$input\" | jq -r '.tool_input.file_path // \"\"')\n\nif [ -n \"$file_path\" ] && [ -f \"$file_path\" ]; then\n  if command -v gofmt >/dev/null 2>&1; then\n    gofmt -w \"$file_path\" 2>&1 | head -5 >&2 || true\n  fi\nfi\n\necho \"$input\""
+          }
+        ],
+        "description": "Auto-format Go files with gofmt after edits"
+      },
+      {
+        "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.go$\"",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "#!/bin/bash\n# Run go vet on edited Go files\ninput=$(cat)\nfile_path=$(echo \"$input\" | jq -r '.tool_input.file_path // \"\"')\n\nif [ -n \"$file_path\" ] && [ -f \"$file_path\" ]; then\n  dir=$(dirname \"$file_path\")\n  if command -v go >/dev/null 2>&1; then\n    cd \"$dir\" && go vet \"./$(basename \"$file_path\")\" 2>&1 | head -10 >&2 || true\n  fi\nfi\n\necho \"$input\""
+          }
+        ],
+        "description": "Run go vet after editing Go files"
+      },
+      {
+        "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.tf$\"",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "#!/bin/bash\n# Auto-format Terraform files\ninput=$(cat)\nfile_path=$(echo \"$input\" | jq -r '.tool_input.file_path // \"\"')\n\nif [ -n \"$file_path\" ] && [ -f \"$file_path\" ]; then\n  dir=$(dirname \"$file_path\")\n  if command -v terraform >/dev/null 2>&1; then\n    cd \"$dir\" && terraform fmt 2>&1 | head -5 >&2 || true\n  elif command -v tofu >/dev/null 2>&1; then\n    cd \"$dir\" && tofu fmt 2>&1 | head -5 >&2 || true\n  fi\nfi\n\necho \"$input\""
+          }
+        ],
+        "description": "Auto-format Terraform files after edits"
+      },
+      {
+        "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.tf$\"",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "#!/bin/bash\n# Validate Terraform files after edits\ninput=$(cat)\nfile_path=$(echo \"$input\" | jq -r '.tool_input.file_path // \"\"')\n\nif [ -n \"$file_path\" ] && [ -f \"$file_path\" ]; then\n  dir=$(dirname \"$file_path\")\n  if command -v terraform >/dev/null 2>&1 && [ -f \"$dir/.terraform.lock.hcl\" ]; then\n    cd \"$dir\" && terraform validate 2>&1 | head -10 >&2 || true\n  elif command -v tofu >/dev/null 2>&1 && [ -f \"$dir/.terraform.lock.hcl\" ]; then\n    cd \"$dir\" && tofu validate 2>&1 | head -10 >&2 || true\n  fi\nfi\n\necho \"$input\""
+          }
+        ],
+        "description": "Run terraform validate after editing .tf files"
       }
     ],
     "Stop": [

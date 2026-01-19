@@ -286,12 +286,10 @@ const Component = ({ children }: Props) => {
 }
 ```
 
-### Supabase Client Types
+### Database Query Types
 ```typescript
 // ❌ ERROR: Type 'any' not assignable
-const { data } = await supabase
-  .from('markets')
-  .select('*')
+const { rows } = await db.query('SELECT * FROM markets')
 
 // ✅ FIX: Add type annotation
 interface Market {
@@ -301,9 +299,9 @@ interface Market {
   // ... other fields
 }
 
-const { data } = await supabase
-  .from('markets')
-  .select('*') as { data: Market[] | null, error: any }
+const { rows } = await db.query<Market>(
+  'SELECT id, name, slug FROM markets'
+)
 ```
 
 ### Redis Stack Types
@@ -530,3 +528,399 @@ After build error resolution:
 ---
 
 **Remember**: The goal is to fix errors quickly with minimal changes. Don't refactor, don't optimize, don't redesign. Fix the error, verify the build passes, move on. Speed and precision over perfection.
+
+---
+
+## Python Error Resolution
+
+### Diagnostic Commands
+
+```bash
+# Type checking
+mypy . --strict
+
+# Syntax check
+python -m py_compile path/to/file.py
+
+# Import check
+python -c "import path.to.module"
+
+# Linting
+ruff check .
+
+# Find missing dependencies
+pip check
+```
+
+### Pattern 1: Missing Type Annotations
+
+```python
+# ❌ ERROR: Function is missing a return type annotation
+def process_data(data):
+    return data.upper()
+
+# ✅ FIX: Add type hints
+def process_data(data: str) -> str:
+    return data.upper()
+
+# ❌ ERROR: Missing type annotation for "items"
+def get_items(items):
+    return [item.name for item in items]
+
+# ✅ FIX: Add type hints
+from typing import Iterable
+
+def get_items(items: Iterable[Item]) -> list[str]:
+    return [item.name for item in items]
+```
+
+### Pattern 2: Pydantic Validation Error
+
+```python
+# ❌ ERROR: Field required [type=missing, input_value={...}]
+class User(BaseModel):
+    name: str
+    email: str
+
+user = User(name="John")  # Missing email
+
+# ✅ FIX: Add default or Optional
+class User(BaseModel):
+    name: str
+    email: str | None = None  # Optional with default
+
+# ❌ ERROR: Input should be a valid string [type=string_type]
+class Config(BaseModel):
+    port: int
+
+Config(port="8080")  # String instead of int
+
+# ✅ FIX: Pydantic v2 - use strict mode or coerce
+class Config(BaseModel):
+    port: int
+
+Config(port=int("8080"))  # Convert explicitly
+```
+
+### Pattern 3: Async/Await Errors
+
+```python
+# ❌ ERROR: 'coroutine' object is not subscriptable
+async def get_user(id: str) -> User:
+    return await db.get_user(id)
+
+user = get_user("123")["name"]  # Missing await!
+
+# ✅ FIX: Add await
+user = await get_user("123")
+name = user.name
+
+# ❌ ERROR: 'await' outside async function
+def process():
+    data = await fetch_data()  # Can't await in sync function
+
+# ✅ FIX: Make function async
+async def process():
+    data = await fetch_data()
+```
+
+### Pattern 4: Import Errors
+
+```python
+# ❌ ERROR: ModuleNotFoundError: No module named 'fastapi'
+from fastapi import FastAPI
+
+# ✅ FIX: Install missing package
+# pip install fastapi
+# or: poetry add fastapi
+
+# ❌ ERROR: ImportError: cannot import name 'BaseSettings' from 'pydantic'
+from pydantic import BaseSettings  # Pydantic v2 moved this
+
+# ✅ FIX: Import from correct module (Pydantic v2)
+from pydantic_settings import BaseSettings
+```
+
+### Pattern 5: Type Mismatch
+
+```python
+# ❌ ERROR: Argument of type "str | None" cannot be assigned to parameter of type "str"
+def greet(name: str) -> str:
+    return f"Hello, {name}"
+
+user_name: str | None = get_name()
+greet(user_name)  # Error: might be None
+
+# ✅ FIX: Add null check
+if user_name is not None:
+    greet(user_name)
+
+# ✅ OR: Use default
+greet(user_name or "Guest")
+```
+
+---
+
+## Go Error Resolution
+
+### Diagnostic Commands
+
+```bash
+# Build check
+go build ./...
+
+# Vet (static analysis)
+go vet ./...
+
+# Detailed linting
+golangci-lint run
+
+# Find unused dependencies
+go mod tidy
+
+# Verify dependencies
+go mod verify
+```
+
+### Pattern 1: Unused Import
+
+```go
+// ❌ ERROR: imported and not used: "fmt"
+import (
+    "fmt"
+    "log"
+)
+
+func main() {
+    log.Println("Hello")
+}
+
+// ✅ FIX: Remove unused import
+import (
+    "log"
+)
+
+// ✅ OR: Use blank identifier if needed for side effects
+import (
+    _ "fmt"  // Only if needed for init()
+    "log"
+)
+```
+
+### Pattern 2: Unhandled Error
+
+```go
+// ❌ ERROR: Error return value is not checked
+file, _ := os.Open(path)
+
+// ✅ FIX: Handle the error
+file, err := os.Open(path)
+if err != nil {
+    return fmt.Errorf("open file %s: %w", path, err)
+}
+defer file.Close()
+
+// ❌ ERROR: Error return value of `rows.Close` is not checked
+rows.Close()
+
+// ✅ FIX: Check error in defer
+defer func() {
+    if err := rows.Close(); err != nil {
+        log.Printf("error closing rows: %v", err)
+    }
+}()
+```
+
+### Pattern 3: Type Mismatch
+
+```go
+// ❌ ERROR: cannot use "hello" (type string) as type int
+var count int = "hello"
+
+// ✅ FIX: Use correct type
+var count int = 42
+
+// ❌ ERROR: cannot convert id (type string) to type int
+func process(id string) {
+    num := int(id)  // Can't directly convert string to int
+}
+
+// ✅ FIX: Use strconv
+func process(id string) error {
+    num, err := strconv.Atoi(id)
+    if err != nil {
+        return fmt.Errorf("invalid id %q: %w", id, err)
+    }
+    // use num
+    return nil
+}
+```
+
+### Pattern 4: Nil Pointer Dereference
+
+```go
+// ❌ POTENTIAL ERROR: nil pointer dereference
+func getName(user *User) string {
+    return user.Name  // Panics if user is nil
+}
+
+// ✅ FIX: Check for nil
+func getName(user *User) string {
+    if user == nil {
+        return ""
+    }
+    return user.Name
+}
+```
+
+### Pattern 5: Interface Satisfaction
+
+```go
+// ❌ ERROR: *MyService does not implement Service (missing Method)
+type Service interface {
+    Process(ctx context.Context, id string) error
+}
+
+type MyService struct{}
+
+func (s *MyService) Process(id string) error {  // Missing ctx!
+    return nil
+}
+
+// ✅ FIX: Match interface signature exactly
+func (s *MyService) Process(ctx context.Context, id string) error {
+    return nil
+}
+```
+
+### Pattern 6: Circular Import
+
+```go
+// ❌ ERROR: import cycle not allowed
+// package a imports package b
+// package b imports package a
+
+// ✅ FIX: Extract shared types to a third package
+// package types - shared types
+// package a imports types
+// package b imports types
+
+// ✅ OR: Use interfaces to break the cycle
+// package a defines interface
+// package b implements interface
+// package a depends on interface, not concrete type
+```
+
+### Pattern 7: Context Usage
+
+```go
+// ❌ WARNING: context.Background() used in request handler
+func handler(w http.ResponseWriter, r *http.Request) {
+    data, err := fetchData(context.Background())  // Should use request context
+}
+
+// ✅ FIX: Use request context
+func handler(w http.ResponseWriter, r *http.Request) {
+    ctx := r.Context()
+    data, err := fetchData(ctx)
+}
+```
+
+---
+
+## Terraform Error Resolution
+
+### Diagnostic Commands
+
+```bash
+# Initialize
+terraform init
+
+# Validate syntax
+terraform validate
+
+# Format check
+terraform fmt -check -recursive
+
+# Plan (dry run)
+terraform plan
+
+# Lint
+tflint --recursive
+```
+
+### Pattern 1: Missing Required Variable
+
+```hcl
+# ❌ ERROR: No value for required variable
+variable "environment" {
+  type = string
+}
+
+# terraform apply -> Error: No value for required variable
+
+# ✅ FIX 1: Add default value
+variable "environment" {
+  type    = string
+  default = "dev"
+}
+
+# ✅ FIX 2: Pass via tfvars file
+# terraform.tfvars
+environment = "production"
+
+# ✅ FIX 3: Pass via command line
+# terraform apply -var="environment=production"
+```
+
+### Pattern 2: Invalid Resource Reference
+
+```hcl
+# ❌ ERROR: Reference to undeclared resource
+resource "aws_instance" "web" {
+  subnet_id = aws_subnet.main.id  # Error if subnet not defined
+}
+
+# ✅ FIX: Define the referenced resource
+resource "aws_subnet" "main" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.1.0/24"
+}
+
+resource "aws_instance" "web" {
+  subnet_id = aws_subnet.main.id
+}
+```
+
+### Pattern 3: Type Constraint Error
+
+```hcl
+# ❌ ERROR: Invalid value for variable
+variable "port" {
+  type = number
+}
+
+# In tfvars: port = "8080"  # String, not number
+
+# ✅ FIX: Use correct type
+# In tfvars: port = 8080  # Number without quotes
+```
+
+### Pattern 4: Deprecated Syntax
+
+```hcl
+# ❌ WARNING: Deprecated syntax
+resource "aws_instance" "web" {
+  # Old style
+  tags {
+    Name = "web"
+  }
+}
+
+# ✅ FIX: Use new syntax
+resource "aws_instance" "web" {
+  tags = {
+    Name = "web"
+  }
+}
+```

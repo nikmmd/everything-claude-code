@@ -22,7 +22,7 @@ Reference this skill when working on the specific project it's designed for. Pro
 **Tech Stack:**
 - **Frontend**: Next.js 15 (App Router), TypeScript, React
 - **Backend**: FastAPI (Python), Pydantic models
-- **Database**: Supabase (PostgreSQL)
+- **Database**: PostgreSQL (via asyncpg or SQLAlchemy)
 - **AI**: Claude API with tool calling and structured output
 - **Deployment**: Google Cloud Run
 - **Testing**: Playwright (E2E), pytest (backend), React Testing Library
@@ -45,7 +45,7 @@ Reference this skill when working on the specific project it's designed for. Pro
               ┌───────────────┼───────────────┐
               ▼               ▼               ▼
         ┌──────────┐   ┌──────────┐   ┌──────────┐
-        │ Supabase │   │  Claude  │   │  Redis   │
+        │PostgreSQL│   │  Claude  │   │  Redis   │
         │ Database │   │   API    │   │  Cache   │
         └──────────┘   └──────────┘   └──────────┘
 ```
@@ -312,14 +312,11 @@ gcloud run deploy backend --source .
 ```bash
 # Frontend (.env.local)
 NEXT_PUBLIC_API_URL=https://api.example.com
-NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 
 # Backend (.env)
-DATABASE_URL=postgresql://...
+DATABASE_URL=postgresql://user:pass@host:5432/dbname
 ANTHROPIC_API_KEY=sk-ant-...
-SUPABASE_URL=https://xxx.supabase.co
-SUPABASE_KEY=eyJ...
+REDIS_URL=redis://localhost:6379
 ```
 
 ---
