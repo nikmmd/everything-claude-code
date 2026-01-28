@@ -38,10 +38,10 @@ For complex tasks requiring deep reasoning:
 3. "Rev the engine" with multiple critique rounds
 4. Use split role sub-agents for diverse analysis
 
-## Build Troubleshooting
+## Error Troubleshooting
 
-If build fails:
-1. Use **build-error-resolver** agent
-2. Analyze error messages
-3. Fix incrementally
+If build fails, tests fail, or runtime errors occur:
+1. Use **error-resolver** agent
+2. Analyze error messages and stack traces
+3. Fix incrementally with minimal diffs
 4. Verify after each fix

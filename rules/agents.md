@@ -8,10 +8,11 @@ Located in `~/.claude/agents/`:
 |-------|---------|-------------|
 | planner | Implementation planning | Complex features, refactoring |
 | architect | System design | Architectural decisions |
-| tdd-guide | Test-driven development | New features, bug fixes |
+| database-designer | DB schema & optimization | Schema design, query optimization, migrations |
+| tdd-agent | Test-driven development | New features, bug fixes |
 | code-reviewer | Code review | After writing code |
 | security-reviewer | Security analysis | Before commits |
-| build-error-resolver | Fix build errors | When build fails |
+| error-resolver | Fix build/functional/perf issues | Build fails, runtime errors, performance issues |
 | e2e-runner | E2E testing | Critical user flows |
 | refactor-cleaner | Dead code cleanup | Code maintenance |
 | doc-updater | Documentation | Updating docs |
@@ -21,8 +22,10 @@ Located in `~/.claude/agents/`:
 No user prompt needed:
 1. Complex feature requests - Use **planner** agent
 2. Code just written/modified - Use **code-reviewer** agent
-3. Bug fix or new feature - Use **tdd-guide** agent
+3. Bug fix or new feature - Use **tdd-agent** agent
 4. Architectural decision - Use **architect** agent
+5. Database schema/query work - Use **database-designer** agent
+6. Build/runtime errors - Use **error-resolver** agent
 
 ## Parallel Task Execution
 

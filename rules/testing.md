@@ -19,14 +19,14 @@ MANDATORY workflow:
 
 ## Troubleshooting Test Failures
 
-1. Use **tdd-guide** agent
+1. Use **tdd-agent** agent
 2. Check test isolation
 3. Verify mocks are correct
 4. Fix implementation, not tests (unless tests are wrong)
 
 ## Agent Support
 
-- **tdd-guide** - Use PROACTIVELY for new features, enforces write-tests-first
+- **tdd-agent** - Use PROACTIVELY for new features, enforces write-tests-first
 - **e2e-runner** - Playwright E2E testing specialist
 
 ## Language-Specific Testing Tools
