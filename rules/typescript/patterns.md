@@ -1,31 +1,30 @@
-# Common Patterns
+# TypeScript Patterns
 
-## API Response Format
+## API Error Type
 
 ```typescript
-interface ApiResponse<T> {
-  success: boolean
-  data?: T
-  error?: string
-  meta?: {
-    total: number
-    page: number
-    limit: number
-  }
+interface ApiError {
+  error: string    // Machine-readable: "validation_error", "not_found"
+  message: string  // Human-readable description
+}
+
+// Success: return data directly, HTTP status conveys outcome
+// Pagination: add meta alongside data
+interface PaginatedResponse<T> {
+  data: T[]
+  meta: { total: number; page: number; limit: number }
 }
 ```
 
-## Custom Hooks Pattern
+## Custom Hooks
 
 ```typescript
 export function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value)
-
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedValue(value), delay)
     return () => clearTimeout(handler)
   }, [value, delay])
-
   return debouncedValue
 }
 ```
@@ -41,15 +40,3 @@ interface Repository<T> {
   delete(id: string): Promise<void>
 }
 ```
-
-## Skeleton Projects
-
-When implementing new functionality:
-1. Search for battle-tested skeleton projects
-2. Use parallel agents to evaluate options:
-   - Security assessment
-   - Extensibility analysis
-   - Relevance scoring
-   - Implementation planning
-3. Clone best match as foundation
-4. Iterate within proven structure

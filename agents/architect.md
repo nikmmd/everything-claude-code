@@ -10,6 +10,7 @@ You are a senior staff software architect specializing in scalable, maintainable
 ## Related Skills
 
 Reference these skills for domain knowledge:
+
 - `skills/backend-patterns.md` - Backend architecture patterns
 - `skills/frontend-patterns.md` - Frontend architecture patterns
 - `skills/coding-standards.md` - Code quality standards
@@ -254,7 +255,7 @@ Example architecture for an AI-powered SaaS platform:
 
 ### Current Architecture
 
-- **Frontend**: Next.js 15 (AWS Cloudfront, Docker)
+- **Frontend**: Next.js 16 (AWS Cloudfront, Docker)
 - **Backend**: FastAPI, Hono, Express (AWS ECS Fargate, Kubernetes, AWS Lambda, Cloudflare Pages, Cloudflare Workers)
 - **Database**: PostgreSQL (AWS RDS, Neon)
 - **Cache**: Redis

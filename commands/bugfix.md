@@ -1,40 +1,23 @@
+---
+description: Diagnose and fix build errors, functional bugs, and performance issues with minimal diffs.
+---
+
 # Bugfix
 
-Diagnose and fix errors with minimal diffs using the **error-resolver** agent.
+Delegates to the **error-resolver** agent for error diagnosis and minimal fixes.
 
 ## Error Categories
 
-- **Build Errors**: Compilation, type errors, imports, config
-- **Functional Bugs**: Logic errors, runtime exceptions, edge cases
-- **Non-Functional Issues**: Performance, memory leaks, race conditions
+- **Build**: Compilation, type errors, imports, config
+- **Functional**: Logic errors, runtime exceptions, edge cases
+- **Non-Functional**: Performance, memory leaks, race conditions
 
 ## Workflow
 
-1. **Diagnose** the error category:
-   - Build error → Run build/compile commands
-   - Functional bug → Reproduce with test or manually
-   - Non-functional → Profile or measure
-
-2. **Collect evidence**:
-   - Error messages and stack traces
-   - Logs around failure point
-   - Input that triggers issue
-
-3. **Root cause analysis**:
-   - Trace execution to failure point
-   - Identify specific line/function
-   - Determine minimal fix
-
-4. **Apply minimal fix**:
-   - Change only what's necessary
-   - Preserve existing behavior
-   - Don't "improve" unrelated code
-
-5. **Verify**:
-   - Error no longer occurs
-   - Tests pass
-   - No new errors introduced
-   - Build succeeds
+1. **Diagnose** — Identify error category and collect evidence
+2. **Root cause** — Trace execution to failure point
+3. **Minimal fix** — Change only what's necessary
+4. **Verify** — Error resolved, tests pass, no regressions
 
 ## Commands by Language
 
@@ -49,4 +32,4 @@ Diagnose and fix errors with minimal diffs using the **error-resolver** agent.
 - Fix one error at a time
 - Stop if fix introduces new errors
 - Stop if same error persists after 3 attempts
-- Minimal diffs only - no refactoring
+- Minimal diffs only — no refactoring unrelated code

@@ -1,28 +1,24 @@
+---
+description: Safely identify and remove dead code, unused exports, and redundant dependencies with test verification.
+---
+
 # Refactor Clean
 
-Safely identify and remove dead code with test verification:
+Delegates to the **refactor-cleaner** agent for dead code cleanup.
 
-1. Run dead code analysis tools:
-   - knip: Find unused exports and files
-   - depcheck: Find unused dependencies
-   - ts-prune: Find unused TypeScript exports
+## Workflow
 
-2. Generate comprehensive report in .reports/dead-code-analysis.md
+1. Run dead code analysis (knip, depcheck, ts-prune)
+2. Categorize findings:
+   - **SAFE**: Unused utilities, test files
+   - **CAUTION**: API routes, components
+   - **DANGER**: Config files, entry points
+3. Propose safe deletions only
+4. Before each deletion: run tests → apply → re-run tests → rollback if fail
+5. Show cleanup summary
 
-3. Categorize findings by severity:
-   - SAFE: Test files, unused utilities
-   - CAUTION: API routes, components
-   - DANGER: Config files, main entry points
+## Rules
 
-4. Propose safe deletions only
-
-5. Before each deletion:
-   - Run full test suite
-   - Verify tests pass
-   - Apply change
-   - Re-run tests
-   - Rollback if tests fail
-
-6. Show summary of cleaned items
-
-Never delete code without running tests first!
+- Never delete without running tests first
+- Start with SAFE category, escalate with user approval
+- Generate report in `.reports/dead-code-analysis.md`

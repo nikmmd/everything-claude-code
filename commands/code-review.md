@@ -1,40 +1,47 @@
+---
+description: Review uncommitted code changes for security vulnerabilities, code quality, and best practices.
+---
+
 # Code Review
 
-Comprehensive security and quality review of uncommitted changes:
+Delegates to the **code-reviewer** agent for comprehensive review of uncommitted changes.
 
-1. Get changed files: git diff --name-only HEAD
+## Workflow
 
-2. For each changed file, check for:
+1. Get changed files: `git diff --name-only HEAD`
+2. Read and analyze each changed file
+3. Generate findings report with severity and suggested fixes
+4. Block commit if CRITICAL or HIGH issues found
 
-**Security Issues (CRITICAL):**
+## What Gets Checked
+
+**Security (CRITICAL):**
 - Hardcoded credentials, API keys, tokens
-- SQL injection vulnerabilities
-- XSS vulnerabilities  
+- SQL injection, XSS vulnerabilities
 - Missing input validation
-- Insecure dependencies
 - Path traversal risks
 
 **Code Quality (HIGH):**
-- Functions > 50 lines
-- Files > 800 lines
+- Functions > 50 lines, files > 800 lines
 - Nesting depth > 4 levels
 - Missing error handling
-- console.log statements
-- TODO/FIXME comments
-- Missing JSDoc for public APIs
+- `console.log` statements left in code
 
 **Best Practices (MEDIUM):**
-- Mutation patterns (use immutable instead)
-- Emoji usage in code/comments
+- Mutation patterns (should use immutable)
 - Missing tests for new code
-- Accessibility issues (a11y)
+- Accessibility issues
 
-3. Generate report with:
-   - Severity: CRITICAL, HIGH, MEDIUM, LOW
-   - File location and line numbers
-   - Issue description
-   - Suggested fix
+## Output Format
 
-4. Block commit if CRITICAL or HIGH issues found
+Each finding includes:
+- **Severity**: CRITICAL / HIGH / MEDIUM / LOW
+- **File**: Location and line numbers
+- **Issue**: Description
+- **Fix**: Suggested resolution
 
-Never approve code with security vulnerabilities!
+## Related
+
+- `/security-review` — Deep security analysis (auto-triggered)
+- `/test-coverage` — Verify test coverage
+- `/tdd` — Write tests for flagged code
