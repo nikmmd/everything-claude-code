@@ -277,4 +277,23 @@ Example architecture for an AI-powered SaaS platform:
 - **1M users**: Microservices architecture, separate read/write databases
 - **10M users**: Event-driven architecture, distributed caching, multi-region
 
+## Delegation to Domain Specialists
+
+When architecture decisions touch specialized domains, delegate to the appropriate expert rather than prescribing implementation details:
+
+| Domain | Delegate to | When |
+|--------|------------|------|
+| Database schema & queries | **database-designer** | Schema design, migration planning, query optimization |
+| Data pipelines | **data-engineer** (Data & AI) | ETL/ELT, streaming, data warehouse design |
+| ML/AI systems | **llm-architect** / **ai-engineer** (Data & AI) | Model serving, RAG architecture, inference optimization |
+| Payment processing | **payment-integration** (Specialized Engineering) | PCI compliance, gateway integration, checkout flows |
+| Blockchain/Web3 | **blockchain-developer** (Specialized Engineering) | Smart contract design, on-chain architecture |
+| IoT/Embedded | **iot-engineer** / **embedded-systems** (Specialized Engineering) | Device protocols, edge computing, firmware |
+| Mobile | **mobile-app-developer** (Specialized Engineering) | Native/cross-platform architecture decisions |
+| Security architecture | **security-reviewer** | Threat modeling, auth design, encryption strategy |
+| Build system design | **build-engineer** (Developer Experience) | Monorepo structure, compilation optimization |
+| Legacy migration | **legacy-modernizer** (Developer Experience) | Incremental modernization strategy |
+
+**Focus on**: System-level design, component boundaries, data flow, and integration patterns. Let domain specialists own the implementation details within their expertise.
+
 **Remember**: Good architecture enables rapid development, easy maintenance, and confident scaling. The best architecture is simple, clear, and follows established patterns.

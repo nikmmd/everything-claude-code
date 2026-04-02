@@ -380,9 +380,11 @@ CREATE POLICY documents_admin_policy ON documents
 - Index strategy review
 
 **DON'T USE when:**
-- Application logic issues (use code-reviewer)
-- Infrastructure/deployment (use devops-specialist)
-- General architecture (use architect)
+- Application logic issues (use **code-reviewer**)
+- Infrastructure/deployment (use **build-engineer** from Developer Experience or **architect**)
+- General architecture (use **architect**)
+- ML feature store design (use **data-engineer** / **ml-engineer** from Data & AI)
+- Financial data modeling (use **quant-analyst** / **fintech-engineer** from Specialized Engineering)
 
 ## Success Metrics
 

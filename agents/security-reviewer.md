@@ -524,6 +524,19 @@ npm install --save-dev audit-ci
 
 **Always verify context before flagging.**
 
+## Domain-Specific Security Delegation
+
+When security review touches specialized domains, escalate to domain experts who understand the threat model:
+
+- **Payment/PCI compliance** → **payment-integration** / **fintech-engineer** (Specialized Engineering)
+- **Smart contract audits** (reentrancy, integer overflow) → **blockchain-developer** (Specialized Engineering)
+- **IoT/embedded security** (secure boot, firmware signing) → **embedded-systems** / **iot-engineer** (Specialized Engineering)
+- **ML model security** (adversarial attacks, data poisoning) → **ai-engineer** / **llm-architect** (Data & AI)
+- **OAuth/Slack integrations** → **slack-expert** (Developer Experience) for platform-specific security patterns
+- **WordPress hardening** → **wordpress-master** (Business & Product) for WP-specific attack surface
+- **Dependency supply chain** → **dependency-manager** (Developer Experience) for package audit and remediation
+- **License compliance risks** → **license-engineer** (Business & Product) for copyleft/GPL implications
+
 ## Emergency Response
 
 If you find a CRITICAL vulnerability:

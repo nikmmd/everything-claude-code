@@ -116,4 +116,36 @@ Create detailed steps with:
 - Missing tests
 - Performance bottlenecks
 
+## Agent Delegation Guide
+
+When producing a plan, recommend the right specialist agents for each phase:
+
+### Implementation Agents
+- **tdd-agent** — Write tests before implementation code
+- **e2e-runner** — Playwright E2E tests for critical user flows
+- **error-resolver** — When build/runtime errors block progress
+
+### Architecture & Design
+- **architect** — System design decisions, trade-off analysis
+- **database-designer** — Schema design, migrations, query optimization
+- **data-engineer** (Data & AI) — ETL/ELT pipelines, data warehousing
+- **llm-architect** (Data & AI) — LLM integration, RAG, fine-tuning strategies
+
+### Quality & Security
+- **code-reviewer** — After each implementation phase
+- **security-reviewer** — Before any auth, payment, or user input code ships
+- **dependency-manager** (Developer Experience) — When adding new packages
+
+### Domain Specialists (delegate when plan touches these domains)
+- **fintech-engineer** / **payment-integration** (Specialized Engineering) — Financial features
+- **mobile-app-developer** (Specialized Engineering) — iOS/Android work
+- **blockchain-developer** (Specialized Engineering) — Smart contracts, Web3
+- **ml-engineer** / **mlops-engineer** (Data & AI) — ML training and deployment
+
+### Post-Implementation
+- **doc-updater** — Update codemaps and documentation
+- **refactor-cleaner** — Clean up dead code after migration
+
+Always include agent recommendations in the plan output so the executor knows which specialists to invoke.
+
 **Remember**: A great plan is specific, actionable, and considers both the happy path and edge cases. The best plans enable confident, incremental implementation.

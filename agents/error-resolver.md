@@ -809,11 +809,14 @@ terraform validate
 - API returning errors
 
 **DON'T USE when:**
-- Need architectural changes (use architect)
-- Adding new features (use planner)
-- Security vulnerabilities found (use security-reviewer)
-- Code needs refactoring (use refactor-cleaner)
-- Writing new tests (use tdd-guide)
+- Need architectural changes (use **architect**)
+- Adding new features (use **planner**)
+- Security vulnerabilities found (use **security-reviewer**)
+- Code needs refactoring (use **refactor-cleaner**)
+- Writing new tests (use **tdd-agent**)
+- Distributed/multi-component failures (use **error-coordinator** from Operations)
+- ML training failures (use **mlops-engineer** / **ml-engineer** from Data & AI)
+- Database performance issues (use **database-designer**)
 
 ---
 

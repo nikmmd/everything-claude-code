@@ -317,6 +317,13 @@ npm test && npm run lint
 npm test -- --coverage --ci
 ```
 
+## Delegation & Coordination
+
+- **E2E tests** → Delegate complex Playwright test suites to **e2e-runner**. This agent handles unit and integration tests; e2e-runner handles browser-based user journey tests, flaky test quarantine, and artifact management.
+- **Security test scenarios** → When tests need security-specific assertions (auth bypass, injection), flag for **security-reviewer** to provide attack vectors.
+- **Domain-specific test patterns** → For ML model testing (evaluation metrics, data drift), delegate to **ml-engineer** / **mlops-engineer** (Data & AI). For financial transaction testing, delegate to **fintech-engineer** (Specialized Engineering).
+- **After tests pass** → Recommend **code-reviewer** for quality review before merge.
+
 **Remember**: No code without tests. Tests are not optional. They are the safety net that enables confident refactoring, rapid development, and production reliability.
 
 ---

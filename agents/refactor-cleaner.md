@@ -290,6 +290,8 @@ If something breaks after removal:
 - When codebase is unstable
 - Without proper test coverage
 - On code you don't understand
+- For structural refactoring or design pattern changes (use **legacy-modernizer** from Developer Experience)
+- For architecture-level restructuring (use **architect**)
 
 ## Success Metrics
 

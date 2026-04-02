@@ -410,6 +410,14 @@ See docs/CODEMAPS/INDEX.md for complete architecture overview.
 - Check all external links
 - Update version references
 
+## Delegation to Documentation Specialists
+
+This agent handles codemap generation and README synchronization from code. For other documentation needs, delegate to:
+
+- **readme-generator** (Developer Experience) — Maintainer-ready README creation with zero-hallucination from repo scanning
+- **api-documenter** (Specialized Engineering) — OpenAPI specs, interactive API portals, SDK documentation
+- **technical-writer** (Business & Product) — User guides, tutorials, knowledge bases, developer onboarding docs
+
 ## Quality Checklist
 
 Before committing documentation:

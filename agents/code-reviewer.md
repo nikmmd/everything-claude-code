@@ -121,6 +121,20 @@ Add your project-specific checks here. Examples:
 
 Customize based on your project's `CLAUDE.md` or skill files.
 
+## Escalation & Delegation
+
+When review findings exceed this agent's scope, recommend the appropriate specialist:
+
+- **CRITICAL security issues** → Escalate to **security-reviewer** for deep vulnerability analysis
+- **Architectural concerns** (wrong patterns, coupling, scaling risks) → Flag for **architect**
+- **Database query issues** (N+1, missing indexes, unsafe migrations) → Flag for **database-designer**
+- **Dependency vulnerabilities** (outdated packages, CVEs) → Delegate to **dependency-manager** (Developer Experience)
+- **Missing tests** for critical code paths → Recommend **tdd-agent** before merge
+- **Domain-specific code** (payment, blockchain, ML) → Note that domain specialists should review:
+  - Payment/financial code → **fintech-engineer** / **payment-integration** (Specialized Engineering)
+  - Smart contracts → **blockchain-developer** (Specialized Engineering)
+  - ML model code → **ml-engineer** (Data & AI)
+
 ## Python Review Checklist
 
 ### Code Quality (HIGH)
